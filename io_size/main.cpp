@@ -27,7 +27,32 @@ uint64_t test_write_pm(size_t io_size, uint8_t * data_space_ptr){
     auto start_time = std::chrono::system_clock::now();
 
     while(offset < count*block_size){
+        // memcpy(data_space_ptr+offset, dummy_data, io_size);
+        // pmemobj_persist(pop, data_space_ptr+offset,io_size);
         pmemobj_memcpy_persist(pop, data_space_ptr+offset, dummy_data ,io_size);
+        offset += block_size;
+    }
+
+    duration = std::chrono::duration_cast<std::chrono::nanoseconds>(
+        std::chrono::system_clock::now() - start_time).count();
+    
+    // std::cout << duration << std::endl;
+
+    return duration;
+}
+uint64_t test_read_pm(size_t io_size, uint8_t * data_space_ptr){
+    // return latency
+
+    uint8_t * dummy_data = (uint8_t*)malloc(io_size);
+
+    uint64_t offset = 0;
+    uint64_t duration; //ns
+    auto start_time = std::chrono::system_clock::now();
+
+    while(offset < count*block_size){
+        memcpy(dummy_data, data_space_ptr+offset, io_size);
+        pmemobj_persist(pop, data_space_ptr+offset  ,io_size);
+        // pmemobj_memcpy_persist(pop, dummy_data,  data_space_ptr+offset  ,io_size);
         offset += block_size;
     }
 
@@ -173,6 +198,25 @@ int test_pm(const std::vector<int> & io_sizes){
         << "," << bandwidth
         << std::endl;
     }
+
+    // std::cout << "io_size(Bytes),read_avg_latency(ns),throughput,bandwidth(MB)" << std::endl;
+
+    // for (auto io_size : io_sizes){
+    //     uint64_t duration = 0;
+    //     for (uint64_t i = 0; i < repeated; i++){
+    //         duration += test_read_pm(io_size, data_space_ptr);
+    //         // latency += test_write_pm(io_size, data_space_ptr);
+    //         // duration += test_random_write_pm(io_size, data_space_ptr);
+    //     }
+    //     double avg_latency = (double)duration/(repeated*count);
+    //     uint64_t throughput = 1000*1000*1000/avg_latency;
+    //     uint64_t bandwidth = io_size*throughput/(1024*1024);
+    //     std::cout << io_size
+    //     << "," << avg_latency
+    //     << "," << throughput
+    //     << "," << bandwidth
+    //     << std::endl;
+    // }
 
 
     // close bench
