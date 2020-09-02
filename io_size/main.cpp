@@ -39,37 +39,37 @@ double test_write_pm(size_t io_size, uint8_t * data_space_ptr){
     return (double)duration/count;
 }
 
-double test_write_pm_2(size_t io_size, uint8_t * data_space_ptr){
-    // return latency
+// double test_write_pm_2(size_t io_size, uint8_t * data_space_ptr){
+//     // return latency
 
-    uint8_t * dummy_data = (uint8_t*)malloc(io_size);
-    for (uint64_t i = 0; i < io_size; i++){
-        dummy_data[i] = (random()+i) % 256;
-    }
+//     uint8_t * dummy_data = (uint8_t*)malloc(io_size);
+//     for (uint64_t i = 0; i < io_size; i++){
+//         dummy_data[i] = (random()+i) % 256;
+//     }
 
-    uint64_t offset = 0;
-    uint64_t offsets[count];
-    int i = 0;
-    while(i < count){
-        offsets[i] = offset;
-        offset += block_size;
-        i++;
-    }
-    uint64_t duration; //ns
-    i = 0;
-    auto start_time = std::chrono::system_clock::now();
+//     uint64_t offset = 0;
+//     uint64_t offsets[count];
+//     int i = 0;
+//     while(i < count){
+//         offsets[i] = offset;
+//         offset += block_size;
+//         i++;
+//     }
+//     uint64_t duration; //ns
+//     i = 0;
+//     auto start_time = std::chrono::system_clock::now();
 
-    while(i < count){
-        pmemobj_memcpy_persist(pop, dummy_data ,data_space_ptr+offsets[i], io_size);
-        i++;
-    }
+//     while(i < count){
+//         pmemobj_memcpy_persist(pop, dummy_data ,data_space_ptr+offsets[i], io_size);
+//         i++;
+//     }
 
-    duration = std::chrono::duration_cast<std::chrono::nanoseconds>(
-        std::chrono::system_clock::now() - start_time).count();
+//     duration = std::chrono::duration_cast<std::chrono::nanoseconds>(
+//         std::chrono::system_clock::now() - start_time).count();
     
 
-    return (double)duration/count;
-}
+//     return (double)duration/count;
+// }
 
 int main(){
     // init io_sizes
@@ -101,7 +101,7 @@ int main(){
         double latency = 0;
         for (uint64_t i = 0; i < repeated; i++){
             // latency += test_write_pm(io_size, data_space_ptr);
-            latency += test_write_pm_2(io_size, data_space_ptr);
+            latency += test_write_pm(io_size, data_space_ptr);
         }
         double avg_latency = latency/repeated;
         uint64_t throughput = 1000*1000*1000/avg_latency;
