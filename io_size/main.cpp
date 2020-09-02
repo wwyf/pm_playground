@@ -7,8 +7,8 @@
 #include <algorithm>
 #include <libpmemobj.h>
 
-const uint64_t block_size = 512*1024*1; // 512KB
-const uint64_t count = 2*1024 * 8; 
+const uint64_t block_size = 1024*1024*1; // 1MB
+const uint64_t count = 1*1024 * 8; 
 // const uint64_t count = 8; 
 const uint64_t data_space_size = block_size*count; // 8GB
 
@@ -181,7 +181,7 @@ int test_pm(const std::vector<int> & io_sizes){
 }
 
 int test_dram(const std::vector<int> & io_sizes){
-    uint64_t repeated = 10;
+    uint64_t repeated = 5000;
 
     uint8_t * data_space_ptr = (uint8_t*)malloc(1024ULL*1024ULL*1024ULL*20ULL);
 
@@ -211,9 +211,10 @@ int main(){
     // init io_sizes
     uint64_t l = 3; // 2^3 8Bytes
     // uint64_t l = 4; // 2^4 16Bytes
+    // uint64_t h = 9; // 2^9 512B
     // uint64_t h = 16; // 2^16 64KB
-    // uint64_t h = 18; // 2^18 256KB
-    uint64_t h = 19; // 2^19 512KB
+    uint64_t h = 18; // 2^18 256KB
+    // uint64_t h = 19; // 2^19 512KB
     // uint64_t h = 20; // 2^20 1MB
     // uint64_t h = 21; // 2^21 2MB
     // uint64_t h = 22; // 2^20 4MB
