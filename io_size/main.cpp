@@ -7,14 +7,14 @@
 #include <algorithm>
 #include <libpmemobj.h>
 
-const uint64_t block_size = 1024*1024*8; // 8MB
-const uint64_t count = 1*1024 * 1; 
+const uint64_t block_size = 512*1024*1; // 512KB
+const uint64_t count = 2*1024 * 8; 
 // const uint64_t count = 8; 
 const uint64_t data_space_size = block_size*count; // 8GB
 
 PMEMobjpool * pop = NULL;
 
-double test_write_pm(size_t io_size, uint8_t * data_space_ptr){
+uint64_t test_write_pm(size_t io_size, uint8_t * data_space_ptr){
     // return latency
 
     uint8_t * dummy_data = (uint8_t*)malloc(io_size);
@@ -27,15 +27,16 @@ double test_write_pm(size_t io_size, uint8_t * data_space_ptr){
     auto start_time = std::chrono::system_clock::now();
 
     while(offset < count*block_size){
-        pmemobj_memcpy_persist(pop, dummy_data ,data_space_ptr+offset, io_size);
+        pmemobj_memcpy_persist(pop, data_space_ptr+offset, dummy_data ,io_size);
         offset += block_size;
     }
 
     duration = std::chrono::duration_cast<std::chrono::nanoseconds>(
         std::chrono::system_clock::now() - start_time).count();
     
+    // std::cout << duration << std::endl;
 
-    return (double)duration/count;
+    return duration;
 }
 
 double test_write_dram(size_t io_size, uint8_t * data_space_ptr){
@@ -52,7 +53,7 @@ double test_write_dram(size_t io_size, uint8_t * data_space_ptr){
     auto start_time = std::chrono::system_clock::now();
 
     while(i < count){
-        memcpy(dummy_data ,data_space_ptr+offset, io_size);
+        memcpy(data_space_ptr+offset, dummy_data , io_size);
         offset += block_size;
         i++;
     }
@@ -85,7 +86,7 @@ double test_write_dram(size_t io_size, uint8_t * data_space_ptr){
 //     auto start_time = std::chrono::system_clock::now();
 
 //     while(i < count){
-//         pmemobj_memcpy_persist(pop, dummy_data ,data_space_ptr+offsets[i], io_size);
+//         pmemobj_memcpy_persist(pop, data_space_ptr+offsets[i],dummy_data , io_size);
 //         i++;
 //     }
 
@@ -127,7 +128,7 @@ double test_random_write_pm(size_t io_size, uint8_t * data_space_ptr){
     auto start_time = std::chrono::system_clock::now();
 
     while(i < count){
-        pmemobj_memcpy_persist(pop, dummy_data ,data_space_ptr+offsets[i], io_size);
+        pmemobj_memcpy_persist(pop, data_space_ptr+offsets[i],dummy_data , io_size);
         i++;
     }
 
@@ -152,16 +153,18 @@ int test_pm(const std::vector<int> & io_sizes){
     }
     uint8_t * data_space_ptr = (uint8_t*)pmemobj_direct(data_space) + 48ULL;
 
+    test_write_pm(8, data_space_ptr);
+
     std::cout << "io_size(Bytes),write_avg_latency(ns),throughput,bandwidth(MB)" << std::endl;
 
     for (auto io_size : io_sizes){
-        double latency = 0;
+        uint64_t duration = 0;
         for (uint64_t i = 0; i < repeated; i++){
-            latency += test_write_pm(io_size, data_space_ptr);
+            duration += test_write_pm(io_size, data_space_ptr);
             // latency += test_write_pm(io_size, data_space_ptr);
-            // latency += test_random_write_pm(io_size, data_space_ptr);
+            // duration += test_random_write_pm(io_size, data_space_ptr);
         }
-        double avg_latency = latency/repeated;
+        double avg_latency = (double)duration/(repeated*count);
         uint64_t throughput = 1000*1000*1000/avg_latency;
         uint64_t bandwidth = io_size*throughput/(1024*1024);
         std::cout << io_size
@@ -207,11 +210,12 @@ int test_dram(const std::vector<int> & io_sizes){
 int main(){
     // init io_sizes
     uint64_t l = 3; // 2^3 8Bytes
+    // uint64_t l = 4; // 2^4 16Bytes
     // uint64_t h = 16; // 2^16 64KB
     // uint64_t h = 18; // 2^18 256KB
-    // uint64_t h = 19; // 2^19 512KB
+    uint64_t h = 19; // 2^19 512KB
     // uint64_t h = 20; // 2^20 1MB
-    uint64_t h = 21; // 2^21 2MB
+    // uint64_t h = 21; // 2^21 2MB
     // uint64_t h = 22; // 2^20 4MB
     uint64_t start_io_size = 8;
     
