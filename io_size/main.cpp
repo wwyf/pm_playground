@@ -22,15 +22,13 @@ double test_write_pm(size_t io_size, uint8_t * data_space_ptr){
         dummy_data[i] = (random()+i) % 256;
     }
 
-    int i = 0;
     uint64_t offset = 0;
     uint64_t duration; //ns
     auto start_time = std::chrono::system_clock::now();
 
-    while(i < count){
+    while(offset < count*block_size){
         pmemobj_memcpy_persist(pop, dummy_data ,data_space_ptr+offset, io_size);
         offset += block_size;
-        i++;
     }
 
     duration = std::chrono::duration_cast<std::chrono::nanoseconds>(
