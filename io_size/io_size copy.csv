@@ -1,0 +1,79 @@
+8589934592
+data_space_size,io_size(Bytes),write_avg_latency(ns),throughput,bandwidth(MB)
+262144,8,201.108,4972460,37
+data_space_size,io_size(Bytes),read_avg_latency(ns),throughput,bandwidth(MB)
+262144,8,182.589,5476777,41
+data_space_size,io_size(Bytes),write_avg_latency(ns),throughput,bandwidth(MB)
+524288,8,207.853,4811083,36
+data_space_size,io_size(Bytes),read_avg_latency(ns),throughput,bandwidth(MB)
+524288,8,182.957,5465767,41
+data_space_size,io_size(Bytes),write_avg_latency(ns),throughput,bandwidth(MB)
+1048576,8,241.159,4146649,31
+data_space_size,io_size(Bytes),read_avg_latency(ns),throughput,bandwidth(MB)
+1048576,8,232.442,4302153,32
+data_space_size,io_size(Bytes),write_avg_latency(ns),throughput,bandwidth(MB)
+2097152,8,227.616,4393371,33
+data_space_size,io_size(Bytes),read_avg_latency(ns),throughput,bandwidth(MB)
+2097152,8,204.265,4895596,37
+data_space_size,io_size(Bytes),write_avg_latency(ns),throughput,bandwidth(MB)
+4194304,8,217.744,4592549,35
+data_space_size,io_size(Bytes),read_avg_latency(ns),throughput,bandwidth(MB)
+4194304,8,181.926,5496732,41
+data_space_size,io_size(Bytes),write_avg_latency(ns),throughput,bandwidth(MB)
+8388608,8,217.696,4593557,35
+data_space_size,io_size(Bytes),read_avg_latency(ns),throughput,bandwidth(MB)
+8388608,8,177.417,5636425,43
+data_space_size,io_size(Bytes),write_avg_latency(ns),throughput,bandwidth(MB)
+16777216,8,217.827,4590794,35
+data_space_size,io_size(Bytes),read_avg_latency(ns),throughput,bandwidth(MB)
+16777216,8,196.166,5097730,38
+data_space_size,io_size(Bytes),write_avg_latency(ns),throughput,bandwidth(MB)
+33554432,8,217.637,4594799,35
+data_space_size,io_size(Bytes),read_avg_latency(ns),throughput,bandwidth(MB)
+33554432,8,187.622,5329875,40
+data_space_size,io_size(Bytes),write_avg_latency(ns),throughput,bandwidth(MB)
+67108864,8,233.283,4286637,32
+data_space_size,io_size(Bytes),read_avg_latency(ns),throughput,bandwidth(MB)
+67108864,8,210.01,4761673,36
+data_space_size,io_size(Bytes),write_avg_latency(ns),throughput,bandwidth(MB)
+134217728,8,239.527,4174888,31
+data_space_size,io_size(Bytes),read_avg_latency(ns),throughput,bandwidth(MB)
+134217728,8,208.589,4794122,36
+data_space_size,io_size(Bytes),write_avg_latency(ns),throughput,bandwidth(MB)
+268435456,8,242.926,4116471,31
+data_space_size,io_size(Bytes),read_avg_latency(ns),throughput,bandwidth(MB)
+268435456,8,211.081,4737518,36
+data_space_size,io_size(Bytes),write_avg_latency(ns),throughput,bandwidth(MB)
+536870912,8,243.898,4100078,31
+data_space_size,io_size(Bytes),read_avg_latency(ns),throughput,bandwidth(MB)
+536870912,8,213.109,4692425,35
+data_space_size,io_size(Bytes),write_avg_latency(ns),throughput,bandwidth(MB)
+1073741824,8,244.639,4087651,31
+data_space_size,io_size(Bytes),read_avg_latency(ns),throughput,bandwidth(MB)
+1073741824,8,213.872,4675699,35
+data_space_size,io_size(Bytes),write_avg_latency(ns),throughput,bandwidth(MB)
+2147483648,8,244.96,4082305,31
+data_space_size,io_size(Bytes),read_avg_latency(ns),throughput,bandwidth(MB)
+2147483648,8,221.756,4509469,34
+data_space_size,io_size(Bytes),write_avg_latency(ns),throughput,bandwidth(MB)
+4294967296,8,246.908,4050090,30
+data_space_size,io_size(Bytes),read_avg_latency(ns),throughput,bandwidth(MB)
+4294967296,8,217.605,4595489,35
+data_space_size,io_size(Bytes),write_avg_latency(ns),throughput,bandwidth(MB)
+8589934592,8,250.443,3992919,30
+data_space_size,io_size(Bytes),read_avg_latency(ns),throughput,bandwidth(MB)
+8589934592,8,226.501,4415000,33
+alloc error
+alloc error
+alloc error
+alloc error
+alloc error
+alloc error
+alloc error
+alloc error
+alloc error
+alloc error
+alloc error
+alloc error
+alloc error
+alloc error
