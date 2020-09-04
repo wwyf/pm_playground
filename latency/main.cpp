@@ -98,30 +98,8 @@ void clean_cache(){
     std::cout << "clean cache ok! cache_array[" << random_index << "]:" << cache_array[random_index] << std::endl;
 }
 
-
-int test_pm(){
-    uint64_t capacity = 1024ULL*1024ULL*1024ULL*20ULL;
-    uint64_t alloc_size = 1024ULL*1024ULL*1024ULL*9ULL;
-
-    // init pm
-    std::string pool_file = "/mnt/pmem/test_write_pool";
-    std::remove(pool_file.c_str());
-    sleep(2);
-    pop = pmemobj_create(pool_file.c_str(), "TEST_WRITE", capacity, 0066);
-    PMEMoid data_space;
-    if(pmemobj_alloc(pop, &data_space, alloc_size, 0,0, NULL)){
-        std::cout << "alloc error" << std::endl;
-        std::remove(pool_file.c_str());
-        return -1;
-    }
-    // uint8_t * data_space_ptr = (uint8_t*)pmemobj_direct(data_space) + 0ULL;
-    uint8_t * data_space_ptr = (uint8_t*)pmemobj_direct(data_space) + 48ULL;
-    alloc_size -= 48ULL;
-
-    warn_up(data_space_ptr, alloc_size);
+void bench_latency(std::string platform, uint8_t * data_space_ptr, uint64_t alloc_size){
     clean_cache();
-
-
 
     std::cout
     << "platform"
@@ -149,51 +127,69 @@ int test_pm(){
 
     std::vector<uint64_t> io_sizes = gen_sizes(8, 1024);
     std::vector<uint64_t> block_sizes = gen_sizes(8, 1024*1024);
-    std::vector<uint64_t> data_space_sizes = gen_sizes(1024*1024, 1024ULL*1024ULL*1024ULL*8ULL);
+    // std::vector<uint64_t> data_space_sizes = gen_sizes(1024*1024, 1024ULL*1024ULL*1024ULL*4ULL);
+    std::vector<uint64_t> data_space_sizes = gen_sizes(1024*1024, 1024ULL*1024ULL*1024ULL);
     // std::vector<std::string> platforms = {"PMEM", "DRAM_cached"};
-    std::vector<std::string> platforms = {"PMEM"};
-    std::vector<std::string> access_patterns = {"random", "sequentail"};
+    std::vector<std::string> access_patterns = {"sequentail","random"};
     std::vector<std::string> operations = {"write", "read"};
 
 
-    for (auto platform : platforms){
-        for (auto access_pattern : access_patterns){
-            for (auto data_space_size : data_space_sizes){
-                for (auto io_size : io_sizes){
-                    std::vector<uint64_t> block_sizes = gen_sizes(io_size, 1024*1024);
-                    for (auto block_size : block_sizes){
-                        for (auto operation : operations){
-                            auto avg_latency = test_access_latency(data_space_ptr,
-                                platform,
-                                operation,
-                                access_pattern,
-                                io_size,
-                                block_size,
-                                data_space_size
-                            );
-                            uint64_t throughput = 1000*1000*1000/avg_latency;
-                            uint64_t bandwidth = io_size*throughput;
-                            std::cout
-                            << platform
-                            << "," << operation
-                            << "," << access_pattern
-                            << "," << io_size
-                            << "," << block_size
-                            << "," << data_space_size/(1024*1024)
-                            << "," << data_space_size/block_size
-                            << "," << avg_latency
-                            << "," << throughput
-                            << "," << bandwidth/(1024*1024)
-                            << std::endl;
+    for (auto access_pattern : access_patterns){
+        for (auto data_space_size : data_space_sizes){
+            for (auto io_size : io_sizes){
+                std::vector<uint64_t> block_sizes = gen_sizes(io_size, 1024*1024);
+                for (auto block_size : block_sizes){
+                    for (auto operation : operations){
+                        auto avg_latency = test_access_latency(data_space_ptr,
+                            platform,
+                            operation,
+                            access_pattern,
+                            io_size,
+                            block_size,
+                            data_space_size
+                        );
+                        uint64_t throughput = 1000*1000*1000/avg_latency;
+                        uint64_t bandwidth = io_size*throughput;
+                        std::cout
+                        << platform
+                        << "," << operation
+                        << "," << access_pattern
+                        << "," << io_size
+                        << "," << block_size
+                        << "," << data_space_size/(1024*1024)
+                        << "," << data_space_size/block_size
+                        << "," << avg_latency
+                        << "," << throughput
+                        << "," << bandwidth/(1024*1024)
+                        << std::endl;
 
-                        }
                     }
                 }
             }
         }
     }
+}
 
+int test_pm(){
+    uint64_t capacity = 1024ULL*1024ULL*1024ULL*20ULL;
+    uint64_t alloc_size = 1024ULL*1024ULL*1024ULL*2ULL;
 
+    // init pm
+    std::string pool_file = "/mnt/pmem/test_write_pool";
+    std::remove(pool_file.c_str());
+    sleep(2);
+    pop = pmemobj_create(pool_file.c_str(), "TEST_WRITE", capacity, 0066);
+    PMEMoid data_space;
+    if(pmemobj_alloc(pop, &data_space, alloc_size, 0,0, NULL)){
+        std::cout << "alloc error" << std::endl;
+        std::remove(pool_file.c_str());
+        return -1;
+    }
+    // uint8_t * data_space_ptr = (uint8_t*)pmemobj_direct(data_space) + 0ULL;
+    uint8_t * data_space_ptr = (uint8_t*)pmemobj_direct(data_space) + 48ULL;
+    alloc_size -= 48ULL;
+    warn_up(data_space_ptr, alloc_size);
+    bench_latency("PMEM", data_space_ptr, alloc_size);
 
     pmemobj_free(&data_space);
     pmemobj_close(pop);
@@ -202,9 +198,22 @@ int test_pm(){
     std::remove(pool_file.c_str());
     return 0;
 }
+int test_dram(){
+    uint64_t capacity = 1024ULL*1024ULL*1024ULL*20ULL;
+    uint64_t alloc_size = 1024ULL*1024ULL*1024ULL*2ULL;
+
+    uint8_t * data_space_ptr = (uint8_t*)malloc(alloc_size);
+    if (data_space_ptr != NULL){
+        bench_latency("DRAM_cached", data_space_ptr, alloc_size);
+    }
+
+    free(data_space_ptr);
+
+    return 0;
+}
 
 int main(){
     test_pm();
-
+    test_dram();
     return 0;
 }
