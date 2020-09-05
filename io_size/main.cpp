@@ -34,7 +34,8 @@ uint64_t test_write_pm(size_t io_size, uint8_t * data_space_ptr){
     while(offset < data_space_size){
         // memcpy(data_space_ptr+offset, dummy_data, io_size);
         // pmemobj_persist(pop, data_space_ptr+offset,io_size);
-        pmemobj_memcpy_persist(pop, data_space_ptr+offset, dummy_data ,io_size);
+        // pmemobj_memcpy_persist(pop, data_space_ptr+offset, dummy_data ,io_size);
+        pmemobj_memcpy(pop, data_space_ptr+offset, dummy_data ,io_size, PMEMOBJ_F_MEM_TEMPORAL);
         offset += block_size;
     }
 
@@ -55,9 +56,11 @@ uint64_t test_read_pm(size_t io_size, uint8_t * data_space_ptr){
     auto start_time = std::chrono::system_clock::now();
 
     while(offset < count*block_size){
-        // memcpy(dummy_data, data_space_ptr+offset, io_size);
+        memcpy(dummy_data, data_space_ptr+offset, io_size);
         // pmemobj_persist(pop, data_space_ptr+offset  ,io_size);
-        pmemobj_memcpy_persist(pop, dummy_data,  data_space_ptr+offset  ,io_size);
+        // pmemobj_memcpy_persist(pop, dummy_data,  data_space_ptr+offset  ,io_size);
+        // pmemobj_memcpy(pop, data_space_ptr+offset, dummy_data ,io_size, PMEMOBJ_F_MEM_TEMPORAL);
+        // pmemobj_memcpy(pop, data_space_ptr+offset, dummy_data ,io_size, PMEMOBJ_F_MEM_TEMPORAL);
         offset += block_size;
     }
 
