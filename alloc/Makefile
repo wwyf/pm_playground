@@ -1,2 +1,2 @@
-main: main.copp
-	g++ -o $@ $^ -lpmemobj 
+main: main.cpp
+	which g++ -o $@ $^ -lpmemobj 
