@@ -80,6 +80,7 @@ double test_merge_latency(
             memcpy_fn = memcpy;
         } else if (platform == "PMEM"){
             memcpy_fn = [](void *dest,	const void *src, size_t len){
+                // return pmemobj_memcpy_persist(pop, dest, src, len);
                 return pmemobj_memcpy(pop, dest, src, len, PMEMOBJ_F_MEM_TEMPORAL|PMEMOBJ_F_MEM_NODRAIN);
             };
         }
