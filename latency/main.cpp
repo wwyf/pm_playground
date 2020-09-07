@@ -333,8 +333,8 @@ void bench_test(std::string platform, uint8_t * data_space_ptr, uint64_t alloc_s
     // std::vector<std::string> operations = {"read"};
     std::vector<std::string> operations = {"write", "read"};
     std::vector<std::string> access_patterns = {"sequential","random"};
-    // std::vector<uint64_t> io_sizes = gen_sizes(8, 1024*64);
-    std::vector<uint64_t> io_sizes = gen_sizes(8,8);
+    std::vector<uint64_t> io_sizes = gen_sizes(8, 1024*64);
+    // std::vector<uint64_t> io_sizes = gen_sizes(8,8);
     // std::vector<uint64_t> block_sizes = {126976}; // 1024*128 - 4096
     // std::vector<uint64_t> block_sizes = {1024*128, 1024*128+4096, 64*1024*1024, 64*1024*1024+4096, 128*1024*1024}; // 1024*128 - 4096
     // std::vector<uint64_t> block_sizes = {8, 1024*128};
