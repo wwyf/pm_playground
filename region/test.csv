@@ -1,0 +1,11 @@
+platform,flush_type,operation,access_pattern,io_size(B),blcok_size(B),data_space_size(B),count,throughput(op/s),bandwidth(MB),avg_latency(ns)
+PMEM,t,read,random,32,64,1024,16,141423034,4315,7.07098
+PMEM,t,read,random,32,64,8192,128,134152270,4094,7.45422
+PMEM,t,read,random,32,64,16384,256,117443082,3584,8.51476
+PMEM,t,read,random,32,64,32768,512,99443007,3034,10.056
+PMEM,t,read,random,32,64,1048576,16384,53435875,1630,18.714
+PMEM,t,read,random,32,64,8388608,131072,21350636,651,46.837
+PMEM,t,read,random,32,64,16777216,262144,21288453,649,46.9738
+PMEM,t,read,random,32,64,28311552,442368,7677043,234,130.258
+PMEM,t,read,random,32,64,33554432,524288,4404103,134,227.061
+PMEM,t,read,random,32,64,67108864,1048576,1799001,54,555.864
