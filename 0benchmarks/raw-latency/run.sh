@@ -22,6 +22,8 @@ echo "[COUNT]:"${c}
 
 ./main | tee main${c}.csv
 
+sleep 10
+
 done
 
 date

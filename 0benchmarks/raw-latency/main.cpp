@@ -164,7 +164,6 @@ void bench_rw_latency(std::string platform, uint8_t * data_space_ptr, uint64_t a
     std::vector<std::string> access_patterns = {"sequential","random"};
     std::vector<uint64_t> io_sizes = gen_sizes(8, 1024*64);
     // std::vector<uint64_t> block_sizes = gen_sizes(8, 1024*64);
-    // std::vector<uint64_t> block_sizes = gen_sizes(8, 1024*64);
     // block_sizes.push_back(1024*128);
     // block_sizes.push_back(1024*128+4096);
     // block_sizes.push_back(1024*1024);
@@ -207,7 +206,7 @@ void bench_rw_latency(std::string platform, uint8_t * data_space_ptr, uint64_t a
                             << "," << io_size
                             << "," << block_size
                             << "," << data_space_size/(1024*1024)
-                            << "," << data_space_size/block_size
+                            << "," << count
                             << "," << throughput
                             << "," << bandwidth/(1024*1024)
                             << "," << avg_latency
