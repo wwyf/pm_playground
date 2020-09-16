@@ -4,12 +4,31 @@
 // https://stackoverflow.com/questions/12631856/difference-between-rdtscp-rdtsc-memory-and-cpuid-rdtsc
 static inline uint64_t get_tsc(){
     uint64_t tsc;
-    __asm__ __volatile__("rdtscp; "         // serializing read of tsc
-                        "shl $32,%%rdx; "  // shift higher 32 bits stored in rdx up
-                        "or %%rdx,%%rax"   // and or onto rax
-                        : "=a"(tsc)        // output to tsc variable
+    __asm__ __volatile__(
+                        "cpuid;"
+                        "rdtsc;"         // serializing read of tsc
+                        "shl $32,%%rdx;"  // shift higher 32 bits stored in rdx up
+                        "or %%rdx,%%rax;"   // and or onto rax
+                        "mov %%rax, %0;"
+                        : "=r"(tsc)        // output to tsc variable
                         :
-                        : "%rcx", "%rdx"); // rcx and rdx are clobbered
+                        :"%rax", "%rbx" , "%rcx", "%rdx");
+    // __asm__ __volatile__(
+    //                     "rdtscp;"         // serializing read of tsc
+    //                     "shl $32,%%rdx;"  // shift higher 32 bits stored in rdx up
+    //                     "or %%rdx,%%rax;"   // and or onto rax
+    //                     "mov %%rax, %0;"
+    //                     "cpuid;"
+    //                     : "=r"(tsc)        // output to tsc variable
+    //                     :
+    //                     :"%rax", "%rbx" , "%rcx", "%rdx"); // rcx and rdx are clobbered
+    // __asm__ __volatile__("cpuid;");
+    // asm volatile (
+    // "RDTSCP\n\t"/*read the clock*/
+    // "mov %%edx, %0\n\t"
+    // "mov %%eax, %1\n\t"
+    // "CPUID\n\t": "=r" (cycles_high1), "=r"
+    // (cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");
     return tsc;
 }
 
@@ -51,14 +70,14 @@ int main(){
     get_counter();
     uint64_t start_ts = get_tsc(), end_ts;
     std::cout << start_ts << std::endl;
-    // std::cout << get_counter() << std::endl;
+    std::cout << get_counter() << std::endl;
     start_ts = get_tsc();
     uint64_t a = 0;
     for (uint64_t i = 0; i < 3ULL*1000*1000*1000; i++){
         a++;
     }
     end_ts = get_tsc();
-    // std::cout << get_counter() << std::endl;
+    std::cout << get_counter() << std::endl;
     std::cout << end_ts << std::endl;
     std::cout << end_ts - start_ts << std::endl;
     std::cout << a << std::endl;
