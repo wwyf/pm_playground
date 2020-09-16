@@ -49,16 +49,16 @@ uint64_t get_counter(void)
 
 int main(){
     get_counter();
-    auto start_ts = get_tsc();
+    uint64_t start_ts = get_tsc(), end_ts;
     std::cout << start_ts << std::endl;
-    std::cout << get_counter() << std::endl;
+    // std::cout << get_counter() << std::endl;
     start_ts = get_tsc();
     uint64_t a = 0;
     for (uint64_t i = 0; i < 3ULL*1000*1000*1000; i++){
         a++;
     }
-    auto end_ts = get_tsc();
-    std::cout << get_counter() << std::endl;
+    end_ts = get_tsc();
+    // std::cout << get_counter() << std::endl;
     std::cout << end_ts << std::endl;
     std::cout << end_ts - start_ts << std::endl;
     std::cout << a << std::endl;
