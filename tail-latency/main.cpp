@@ -10,6 +10,7 @@
 #include <cassert>
 #include <unistd.h>
 #include <libpmemobj.h>
+#include <x86intrin.h>
 #define unlikely(x)    __builtin_expect(!!(x), 0) 
 #define likely(x)      __builtin_expect(!!(x), 1)
 
@@ -62,12 +63,6 @@ static inline uint64_t  get_start_tsc(){
     // "mov %%eax, %1\n\t": "=r" (cycles_high), "=r"
     // (cycles_low):: "%rax", "%rbx", "%rcx", "%rdx");
     // tsc = (uint64_t(cycles_high) << 32) | cycles_low;
-
-    return tsc;
-/*
-Call the function to benchmark
-*/
-
     return tsc;
 }
 static inline uint64_t  get_end_tsc(){
@@ -162,6 +157,10 @@ void test_access_latency(uint8_t* data_space_ptr, std::string platform, std::str
     auto end_time = std::chrono::high_resolution_clock::now();
     auto start_tsc = get_start_tsc();
     auto end_tsc = get_end_tsc();
+    auto temp_start_time = std::chrono::high_resolution_clock::now();
+    auto temp_end_time = std::chrono::high_resolution_clock::now();
+    auto temp_start_tsc = get_start_tsc();
+    auto temp_end_tsc = get_end_tsc();
 
 // 1.1. ns per op
     if (clean_cache() != 8) {
@@ -177,7 +176,7 @@ void test_access_latency(uint8_t* data_space_ptr, std::string platform, std::str
         cur_ptr = (uint64_t*)data_space_ptr;
         while(cur_count < count){
             start_time = std::chrono::high_resolution_clock::now();
-            memcpy_fn(dummy_data, cur_ptr, io_size); cur_ptr = (uint64_t*)*dummy_data;
+            pmemobj_memcpy_persist(pop, dummy_data, cur_ptr, io_size); cur_ptr = (uint64_t*)*dummy_data;
             end_time = std::chrono::high_resolution_clock::now();
             durations[cur_count] = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
             cur_count++;
@@ -186,7 +185,7 @@ void test_access_latency(uint8_t* data_space_ptr, std::string platform, std::str
         if (access_pattern == "sequential"){
             while(likely(cur_count < count)){
                 start_time = std::chrono::high_resolution_clock::now();
-                memcpy_fn(data_space_ptr+offset, dummy_data ,io_size);
+                pmemobj_memcpy_persist(pop, data_space_ptr+offset, dummy_data ,io_size);
                 end_time = std::chrono::high_resolution_clock::now();
                 durations[cur_count] = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
                 offset += block_size;
@@ -195,7 +194,7 @@ void test_access_latency(uint8_t* data_space_ptr, std::string platform, std::str
         } else if (access_pattern == "random"){
             while(likely(cur_count < count)){
                 start_time = std::chrono::high_resolution_clock::now();
-                memcpy_fn((uint64_t*)addresses[cur_count], dummy_data ,io_size);
+                pmemobj_memcpy_persist(pop, (uint64_t*)addresses[cur_count], dummy_data ,io_size);
                 end_time = std::chrono::high_resolution_clock::now();
                 durations[cur_count] = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
                 cur_count++;
@@ -215,7 +214,7 @@ void test_access_latency(uint8_t* data_space_ptr, std::string platform, std::str
         cur_ptr = (uint64_t*)data_space_ptr;
         start_time = std::chrono::high_resolution_clock::now();
         while(cur_count < count){
-            memcpy_fn(dummy_data, cur_ptr, io_size); cur_ptr = (uint64_t*)*dummy_data;
+            pmemobj_memcpy_persist(pop, dummy_data, cur_ptr, io_size); cur_ptr = (uint64_t*)*dummy_data;
             cur_count++;
         }
         end_time = std::chrono::high_resolution_clock::now();
@@ -224,7 +223,7 @@ void test_access_latency(uint8_t* data_space_ptr, std::string platform, std::str
             uint64_t offset = 0;
             start_time = std::chrono::high_resolution_clock::now();
             while(likely(cur_count < count)){
-                memcpy_fn(data_space_ptr+offset, dummy_data ,io_size);
+                pmemobj_memcpy_persist(pop, data_space_ptr+offset, dummy_data ,io_size);
                 offset += block_size;
                 cur_count++;
             }
@@ -232,7 +231,7 @@ void test_access_latency(uint8_t* data_space_ptr, std::string platform, std::str
         } else if (access_pattern == "random"){
             start_time = std::chrono::high_resolution_clock::now();
             while(likely(cur_count < count)){
-                memcpy_fn((uint64_t*)addresses[cur_count], dummy_data ,io_size);
+                pmemobj_memcpy_persist(pop, (uint64_t*)addresses[cur_count], dummy_data ,io_size);
                 cur_count++;
             }
             end_time = std::chrono::high_resolution_clock::now();
@@ -268,7 +267,7 @@ void test_access_latency(uint8_t* data_space_ptr, std::string platform, std::str
         cur_ptr = (uint64_t*)data_space_ptr;
         while(cur_count < count){
             start_tsc = get_start_tsc();
-            memcpy_fn(dummy_data, cur_ptr, io_size); cur_ptr = (uint64_t*)*dummy_data;
+            pmemobj_memcpy_persist(pop, dummy_data, cur_ptr, io_size); cur_ptr = (uint64_t*)*dummy_data;
             end_tsc = get_end_tsc();
             cycles[cur_count] = end_tsc - start_tsc;
             cur_count++;
@@ -277,7 +276,7 @@ void test_access_latency(uint8_t* data_space_ptr, std::string platform, std::str
         if (access_pattern == "sequential"){
             while(likely(cur_count < count)){
                 start_tsc = get_start_tsc();
-                memcpy_fn(data_space_ptr+offset, dummy_data ,io_size);
+                pmemobj_memcpy_persist(pop, data_space_ptr+offset, dummy_data ,io_size);
                 end_tsc = get_end_tsc();
                 cycles[cur_count] = end_tsc - start_tsc;
                 offset += block_size;
@@ -286,7 +285,7 @@ void test_access_latency(uint8_t* data_space_ptr, std::string platform, std::str
         } else if (access_pattern == "random"){
             while(likely(cur_count < count)){
                 start_tsc = get_start_tsc();
-                memcpy_fn((uint64_t*)addresses[cur_count], dummy_data ,io_size);
+                pmemobj_memcpy_persist(pop, (uint64_t*)addresses[cur_count], dummy_data ,io_size);
                 end_tsc = get_end_tsc();
                 cycles[cur_count] = end_tsc - start_tsc;
                 cur_count++;
@@ -306,7 +305,7 @@ void test_access_latency(uint8_t* data_space_ptr, std::string platform, std::str
         cur_ptr = (uint64_t*)data_space_ptr;
         start_tsc = get_start_tsc();
         while(cur_count < count){
-            memcpy_fn(dummy_data, cur_ptr, io_size); cur_ptr = (uint64_t*)*dummy_data;
+            pmemobj_memcpy_persist(pop, dummy_data, cur_ptr, io_size); cur_ptr = (uint64_t*)*dummy_data;
             cur_count++;
         }
         end_tsc = get_end_tsc();
@@ -314,7 +313,7 @@ void test_access_latency(uint8_t* data_space_ptr, std::string platform, std::str
         if (access_pattern == "sequential"){
             start_tsc = get_start_tsc();
             while(likely(cur_count < count)){
-                memcpy_fn(data_space_ptr+offset, dummy_data ,io_size);
+                pmemobj_memcpy_persist(pop, data_space_ptr+offset, dummy_data ,io_size);
                 offset += block_size;
                 cur_count++;
             }
@@ -322,7 +321,7 @@ void test_access_latency(uint8_t* data_space_ptr, std::string platform, std::str
         } else if (access_pattern == "random"){
             start_tsc = get_start_tsc();
             while(likely(cur_count < count)){
-                memcpy_fn((uint64_t*)addresses[cur_count], dummy_data ,io_size);
+                pmemobj_memcpy_persist(pop, (uint64_t*)addresses[cur_count], dummy_data ,io_size);
                 cur_count++;
             }
             end_tsc = get_end_tsc();
@@ -480,10 +479,10 @@ int test_latency(){
     bench_rw_latency("PMEM", pmem_data_space_ptr, alloc_size);
 
 
-    for (uint64_t i = 0; i < alloc_size; i++){
-        dram_data_space_ptr[i] = 0;
-    }
-    bench_rw_latency("DRAM_cached", dram_data_space_ptr, alloc_size);
+    // for (uint64_t i = 0; i < alloc_size; i++){
+    //     dram_data_space_ptr[i] = 0;
+    // }
+    // bench_rw_latency("DRAM_cached", dram_data_space_ptr, alloc_size);
 
     // close
     pmemobj_free(&data_space);

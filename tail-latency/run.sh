@@ -1,6 +1,9 @@
 #!/bin/bash
 # set -x
 
+# ../scripts/cpu-freq-stable.sh enable
+# sleep 1
+
 source /mnt/wyf/env.sh
 spack load gcc@9.3.0
 spack load builtin.pmdk@1.9
@@ -12,9 +15,11 @@ g++ main.cpp -o main -std=c++11 -Ofast -lpmemobj
 # g++ main.cpp -o io_size -std=c++17 -Og -g -ggdb -fsanitize=address -lpmemobj  
 date
 
-sudo PATH=${PATH} LD_LIBRARY_PATH=${LD_LIBRARY_PATH} -E ./main | tee main.csv
+taskset -c 0 ./main
 
 date
 cat main.csv | column -t -s , 
 
-# rm main
+rm main
+
+# ../scripts/cpu-freq-stable.sh disable

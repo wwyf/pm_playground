@@ -1,330 +1,165 @@
 platform,flush_type,operation,access_pattern,io_size(B),blcok_size(B),data_space_size(MB),count
-PMEM,nt,read,sequential,32,1052672,13312,12288
-ns per op with total : 397
-min ns: 334
-avg ns: 419
-max ns: 16086
-0.01	:	347 ns
-0.05	:	396 ns
-0.1	:	397 ns
-0.2	:	399 ns
-0.3	:	401 ns
-0.4	:	403 ns
-0.5	:	404 ns
-0.6	:	406 ns
-0.7	:	408 ns
-0.8	:	411 ns
-0.9	:	468 ns
-0.95	:	490 ns
-0.99	:	597 ns
-0.999	:	890 ns
-0.9999	:	10421 ns
-0.99999	:	11047 ns
-cycles per op with total : 547
-min cycles : 754
-avg cycles : 916
-max cycles: 36772
-0.01	:	760 cycles
-0.05	:	766 cycles
-0.1	:	774 cycles
-0.2	:	786 cycles
-0.3	:	900 cycles
-0.4	:	906 cycles
-0.5	:	912 cycles
-0.6	:	916 cycles
-0.7	:	920 cycles
-0.8	:	926 cycles
-0.9	:	962 cycles
-0.95	:	1100 cycles
-0.99	:	1382 cycles
-0.999	:	1862 cycles
-0.9999	:	24202 cycles
-0.99999	:	36302 cycles
-PMEM,nt,read,sequential,64,1052672,13312,12288
-ns per op with total : 217
-min ns: 31
-avg ns: 452
-max ns: 3590
-0.01	:	37 ns
-0.05	:	337 ns
-0.1	:	339 ns
-0.2	:	344 ns
-0.3	:	347 ns
-0.4	:	392 ns
-0.5	:	401 ns
-0.6	:	407 ns
-0.7	:	449 ns
-0.8	:	483 ns
-0.9	:	776 ns
-0.95	:	913 ns
-0.99	:	1082 ns
-0.999	:	1282 ns
-0.9999	:	2213 ns
-0.99999	:	2325 ns
-cycles per op with total : 531
-min cycles : 62
-avg cycles : 880
-max cycles: 4420
-0.01	:	90 cycles
-0.05	:	762 cycles
-0.1	:	766 cycles
-0.2	:	774 cycles
-0.3	:	782 cycles
-0.4	:	794 cycles
-0.5	:	900 cycles
-0.6	:	910 cycles
-0.7	:	922 cycles
-0.8	:	990 cycles
-0.9	:	1032 cycles
-0.95	:	1076 cycles
-0.99	:	1370 cycles
-0.999	:	2112 cycles
-0.9999	:	4068 cycles
-0.99999	:	4100 cycles
-PMEM,nt,write,sequential,32,1052672,13312,12288
-ns per op with total : 394
+PMEM,nt,read,sequential,32,1048576,13312,12288
+ns per op with total : 409
+min ns: 401
+avg ns: 437
+max ns: 15865
+0.01	:	405 ns
+0.05	:	407 ns
+0.1	:	408 ns
+0.2	:	411 ns
+0.3	:	413 ns
+0.4	:	414 ns
+0.5	:	415 ns
+0.6	:	417 ns
+0.7	:	420 ns
+0.8	:	423 ns
+0.9	:	496 ns
+0.95	:	568 ns
+0.99	:	658 ns
+0.999	:	908 ns
+0.9999	:	11619 ns
+0.99999	:	11727 ns
+cycles per op with total : 947
+min cycles : 82
+avg cycles : 977
+max cycles: 36158
+0.01	:	918 cycles
+0.05	:	922 cycles
+0.1	:	926 cycles
+0.2	:	932 cycles
+0.3	:	938 cycles
+0.4	:	942 cycles
+0.5	:	944 cycles
+0.6	:	950 cycles
+0.7	:	956 cycles
+0.8	:	962 cycles
+0.9	:	1054 cycles
+0.95	:	1136 cycles
+0.99	:	1482 cycles
+0.999	:	2046 cycles
+0.9999	:	8064 cycles
+0.99999	:	27010 cycles
+PMEM,nt,read,sequential,64,1048576,13312,12288
+ns per op with total : 410
+min ns: 405
+avg ns: 456
+max ns: 16533
+0.01	:	418 ns
+0.05	:	420 ns
+0.1	:	422 ns
+0.2	:	425 ns
+0.3	:	427 ns
+0.4	:	428 ns
+0.5	:	430 ns
+0.6	:	432 ns
+0.7	:	434 ns
+0.8	:	439 ns
+0.9	:	507 ns
+0.95	:	537 ns
+0.99	:	760 ns
+0.999	:	1740 ns
+0.9999	:	11883 ns
+0.99999	:	16271 ns
+cycles per op with total : 980
+min cycles : 84
+avg cycles : 964
+max cycles: 29264
+0.01	:	122 cycles
+0.05	:	924 cycles
+0.1	:	928 cycles
+0.2	:	934 cycles
+0.3	:	938 cycles
+0.4	:	942 cycles
+0.5	:	946 cycles
+0.6	:	948 cycles
+0.7	:	954 cycles
+0.8	:	962 cycles
+0.9	:	1024 cycles
+0.95	:	1132 cycles
+0.99	:	1442 cycles
+0.999	:	1860 cycles
+0.9999	:	4972 cycles
+0.99999	:	25020 cycles
+PMEM,nt,write,sequential,32,1048576,13312,12288
+ns per op with total : 734
 min ns: 32
-avg ns: 373
-max ns: 17265
-0.01	:	33 ns
-0.05	:	34 ns
+avg ns: 274
+max ns: 16690
+0.01	:	35 ns
+0.05	:	36 ns
 0.1	:	36 ns
-0.2	:	101 ns
-0.3	:	116 ns
-0.4	:	126 ns
-0.5	:	140 ns
-0.6	:	424 ns
-0.7	:	492 ns
-0.8	:	690 ns
-0.9	:	909 ns
-0.95	:	1071 ns
-0.99	:	1255 ns
-0.999	:	1653 ns
-0.9999	:	11986 ns
-0.99999	:	12020 ns
-cycles per op with total : 910
-min cycles : 58
-avg cycles : 78
-max cycles: 2592
-0.01	:	60 cycles
-0.05	:	60 cycles
+0.2	:	37 ns
+0.3	:	38 ns
+0.4	:	40 ns
+0.5	:	41 ns
+0.6	:	136 ns
+0.7	:	221 ns
+0.8	:	537 ns
+0.9	:	895 ns
+0.95	:	1119 ns
+0.99	:	1447 ns
+0.999	:	1862 ns
+0.9999	:	3763 ns
+0.99999	:	16601 ns
+cycles per op with total : 1696
+min cycles : 60
+avg cycles : 80
+max cycles: 3350
+0.01	:	62 cycles
+0.05	:	62 cycles
 0.1	:	62 cycles
-0.2	:	62 cycles
+0.2	:	64 cycles
 0.3	:	64 cycles
 0.4	:	64 cycles
-0.5	:	70 cycles
-0.6	:	70 cycles
-0.7	:	72 cycles
-0.8	:	74 cycles
-0.9	:	80 cycles
-0.95	:	244 cycles
-0.99	:	260 cycles
-0.999	:	778 cycles
-0.9999	:	1046 cycles
-0.99999	:	1068 cycles
-PMEM,nt,write,sequential,64,1052672,13312,12288
-ns per op with total : 398
-min ns: 30
-avg ns: 42
-max ns: 1299
-0.01	:	30 ns
-0.05	:	30 ns
-0.1	:	30 ns
-0.2	:	31 ns
-0.3	:	31 ns
-0.4	:	31 ns
-0.5	:	33 ns
-0.6	:	33 ns
-0.7	:	34 ns
-0.8	:	34 ns
-0.9	:	34 ns
-0.95	:	112 ns
-0.99	:	206 ns
-0.999	:	838 ns
-0.9999	:	1216 ns
-0.99999	:	1289 ns
-cycles per op with total : 916
-min cycles : 54
+0.5	:	74 cycles
+0.6	:	76 cycles
+0.7	:	76 cycles
+0.8	:	76 cycles
+0.9	:	78 cycles
+0.95	:	130 cycles
+0.99	:	264 cycles
+0.999	:	722 cycles
+0.9999	:	1074 cycles
+0.99999	:	1174 cycles
+PMEM,nt,write,sequential,64,1048576,13312,12288
+ns per op with total : 469
+min ns: 34
+avg ns: 335
+max ns: 16439
+0.01	:	35 ns
+0.05	:	35 ns
+0.1	:	36 ns
+0.2	:	37 ns
+0.3	:	38 ns
+0.4	:	39 ns
+0.5	:	103 ns
+0.6	:	156 ns
+0.7	:	470 ns
+0.8	:	741 ns
+0.9	:	991 ns
+0.95	:	1156 ns
+0.99	:	1521 ns
+0.999	:	2023 ns
+0.9999	:	11025 ns
+0.99999	:	11523 ns
+cycles per op with total : 1084
+min cycles : 56
 avg cycles : 83
-max cycles: 2714
+max cycles: 2102
 0.01	:	56 cycles
-0.05	:	56 cycles
+0.05	:	58 cycles
 0.1	:	58 cycles
 0.2	:	58 cycles
-0.3	:	60 cycles
-0.4	:	64 cycles
-0.5	:	66 cycles
+0.3	:	58 cycles
+0.4	:	60 cycles
+0.5	:	68 cycles
 0.6	:	68 cycles
-0.7	:	68 cycles
-0.8	:	74 cycles
-0.9	:	134 cycles
-0.95	:	242 cycles
-0.99	:	268 cycles
-0.999	:	664 cycles
-0.9999	:	1076 cycles
-0.99999	:	1948 cycles
-platform,flush_type,operation,access_pattern,io_size(B),blcok_size(B),data_space_size(MB),count
-DRAM_cached,nt,read,sequential,32,1052672,13312,12288
-ns per op with total : 93
-min ns: 31
-avg ns: 105
-max ns: 3728
-0.01	:	87 ns
-0.05	:	88 ns
-0.1	:	89 ns
-0.2	:	89 ns
-0.3	:	90 ns
-0.4	:	91 ns
-0.5	:	94 ns
-0.6	:	95 ns
-0.7	:	95 ns
-0.8	:	96 ns
-0.9	:	107 ns
-0.95	:	176 ns
-0.99	:	378 ns
-0.999	:	479 ns
-0.9999	:	520 ns
-0.99999	:	523 ns
-cycles per op with total : 216
-min cycles : 58
-avg cycles : 250
-max cycles: 3252
-0.01	:	198 cycles
-0.05	:	202 cycles
-0.1	:	204 cycles
-0.2	:	208 cycles
-0.3	:	212 cycles
-0.4	:	216 cycles
-0.5	:	218 cycles
-0.6	:	220 cycles
-0.7	:	222 cycles
-0.8	:	230 cycles
-0.9	:	272 cycles
-0.95	:	414 cycles
-0.99	:	954 cycles
-0.999	:	1140 cycles
-0.9999	:	1334 cycles
-0.99999	:	2950 cycles
-DRAM_cached,nt,read,sequential,64,1052672,13312,12288
-ns per op with total : 103
-min ns: 88
-avg ns: 125
-max ns: 5103
-0.01	:	93 ns
-0.05	:	94 ns
-0.1	:	95 ns
-0.2	:	96 ns
-0.3	:	98 ns
-0.4	:	99 ns
-0.5	:	100 ns
-0.6	:	102 ns
-0.7	:	104 ns
-0.8	:	109 ns
-0.9	:	181 ns
-0.95	:	312 ns
-0.99	:	439 ns
-0.999	:	523 ns
-0.9999	:	578 ns
-0.99999	:	2979 ns
-cycles per op with total : 225
-min cycles : 204
-avg cycles : 294
-max cycles: 1348
-0.01	:	212 cycles
-0.05	:	214 cycles
-0.1	:	216 cycles
-0.2	:	218 cycles
-0.3	:	220 cycles
-0.4	:	230 cycles
-0.5	:	232 cycles
-0.6	:	234 cycles
-0.7	:	236 cycles
-0.8	:	248 cycles
-0.9	:	430 cycles
-0.95	:	818 cycles
-0.99	:	988 cycles
-0.999	:	1146 cycles
-0.9999	:	1222 cycles
-0.99999	:	1298 cycles
-DRAM_cached,nt,write,sequential,32,1052672,13312,12288
-ns per op with total : 37
-min ns: 18
-avg ns: 27
-max ns: 706
-0.01	:	18 ns
-0.05	:	18 ns
-0.1	:	18 ns
-0.2	:	18 ns
-0.3	:	19 ns
-0.4	:	19 ns
-0.5	:	25 ns
-0.6	:	26 ns
-0.7	:	27 ns
-0.8	:	29 ns
-0.9	:	30 ns
-0.95	:	47 ns
-0.99	:	110 ns
-0.999	:	260 ns
-0.9999	:	427 ns
-0.99999	:	451 ns
-cycles per op with total : 86
-min cycles : 26
-avg cycles : 46
-max cycles: 1186
-0.01	:	28 cycles
-0.05	:	28 cycles
-0.1	:	28 cycles
-0.2	:	28 cycles
-0.3	:	28 cycles
-0.4	:	30 cycles
-0.5	:	44 cycles
-0.6	:	44 cycles
-0.7	:	44 cycles
-0.8	:	46 cycles
-0.9	:	46 cycles
-0.95	:	86 cycles
-0.99	:	228 cycles
-0.999	:	656 cycles
-0.9999	:	994 cycles
-0.99999	:	1042 cycles
-DRAM_cached,nt,write,sequential,64,1052672,13312,12288
-ns per op with total : 38
-min ns: 18
-avg ns: 27
-max ns: 417
-0.01	:	18 ns
-0.05	:	18 ns
-0.1	:	19 ns
-0.2	:	19 ns
-0.3	:	20 ns
-0.4	:	20 ns
-0.5	:	25 ns
-0.6	:	26 ns
-0.7	:	28 ns
-0.8	:	28 ns
-0.9	:	32 ns
-0.95	:	47 ns
-0.99	:	110 ns
-0.999	:	172 ns
-0.9999	:	371 ns
-0.99999	:	380 ns
-cycles per op with total : 87
-min cycles : 28
-avg cycles : 46
-max cycles: 1016
-0.01	:	28 cycles
-0.05	:	28 cycles
-0.1	:	28 cycles
-0.2	:	30 cycles
-0.3	:	30 cycles
-0.4	:	30 cycles
-0.5	:	44 cycles
-0.6	:	44 cycles
-0.7	:	44 cycles
-0.8	:	44 cycles
-0.9	:	46 cycles
-0.95	:	86 cycles
-0.99	:	230 cycles
-0.999	:	720 cycles
-0.9999	:	1008 cycles
-0.99999	:	1012 cycles
+0.7	:	70 cycles
+0.8	:	108 cycles
+0.9	:	136 cycles
+0.95	:	152 cycles
+0.99	:	312 cycles
+0.999	:	682 cycles
+0.9999	:	1054 cycles
+0.99999	:	1070 cycles

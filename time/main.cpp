@@ -1,84 +1,143 @@
 #include <cstdlib>
 #include <iostream>
+#include <chrono>
 
-// https://stackoverflow.com/questions/12631856/difference-between-rdtscp-rdtsc-memory-and-cpuid-rdtsc
-static inline uint64_t get_tsc(){
+static inline uint64_t  get_start_tsc(){
     uint64_t tsc;
     __asm__ __volatile__(
                         "cpuid;"
                         "rdtsc;"         // serializing read of tsc
                         "shl $32,%%rdx;"  // shift higher 32 bits stored in rdx up
                         "or %%rdx,%%rax;"   // and or onto rax
-                        "mov %%rax, %0;"
-                        : "=r"(tsc)        // output to tsc variable
+                        : "=a"(tsc)        // output to tsc variable
                         :
-                        :"%rax", "%rbx" , "%rcx", "%rdx");
+                        :"%rbx" , "%rcx", "%rdx");
+
     // __asm__ __volatile__(
-    //                     "rdtscp;"         // serializing read of tsc
+    //                     "cpuid;"
+    //                     "rdtsc;"         // serializing read of tsc
     //                     "shl $32,%%rdx;"  // shift higher 32 bits stored in rdx up
     //                     "or %%rdx,%%rax;"   // and or onto rax
     //                     "mov %%rax, %0;"
-    //                     "cpuid;"
     //                     : "=r"(tsc)        // output to tsc variable
     //                     :
-    //                     :"%rax", "%rbx" , "%rcx", "%rdx"); // rcx and rdx are clobbered
-    // __asm__ __volatile__("cpuid;");
+    //                     :"%rax", "%rbx" , "%rcx", "%rdx");
+
+    // uint32_t cycles_high, cycles_low;
+    // asm volatile (
+    // "CPUID\n\t"/*serialize*/
+    // "RDTSC\n\t"/*read the clock*/
+    // "mov %%edx, %0\n\t"
+    // "mov %%eax, %1\n\t": "=r" (cycles_high), "=r"
+    // (cycles_low):: "%rax", "%rbx", "%rcx", "%rdx");
+    // tsc = (uint64_t(cycles_high) << 32) | cycles_low;
+    return tsc;
+}
+static inline uint64_t  get_end_tsc(){
+    uint64_t tsc;
+    __asm__ __volatile__(
+                        "rdtscp;"         // serializing read of tsc
+                        "shl $32,%%rdx;"  // shift higher 32 bits stored in rdx up
+                        "or %%rdx,%%rax;"   // and or onto rax
+                        "mov %%rax, %0;"
+                        "cpuid;"
+                        : "=r"(tsc)        // output to tsc variable
+                        :
+                        :"%rax", "%rbx" , "%rcx", "%rdx");
+
+    // uint32_t cycles_high, cycles_low;
     // asm volatile (
     // "RDTSCP\n\t"/*read the clock*/
     // "mov %%edx, %0\n\t"
     // "mov %%eax, %1\n\t"
-    // "CPUID\n\t": "=r" (cycles_high1), "=r"
-    // (cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");
+    // "CPUID\n\t": "=r" (cycles_high), "=r"
+    // (cycles_low):: "%rax", "%rbx", "%rcx", "%rdx");
+    // tsc = (uint64_t(cycles_high) << 32) | cycles_low;
+
     return tsc;
 }
 
-// https://www.cnblogs.com/cnmaizi/archive/2011/01/17/1937772.html
-void access_counter(unsigned *hi, unsigned *lo)
-{
-        asm("rdtsc; movl %%edx, %0; movl %%eax, %1"
-                        : "=r" (*hi), "=r" (*lo)
-                        : /* No input */
-                        : "%edx", "%eax");
-        return;
+static inline uint64_t run_some_code(uint64_t input){
+    // 24~26 cycle
+    uint64_t var = input;
+    uint64_t ret = 0;
+    __asm__ __volatile__(
+                        "mov  %0, %%rax;"
+                        "inc %%rax;"
+                        "mov  %%rax, %1;"
+                        : "=r"(ret) 
+                        : "r"(var)
+                        :"%rax");
+    return ret;
 }
 
-static unsigned cyc_hi = 0;
-static unsigned cyc_lo = 0;
-
-uint64_t get_counter(void)
-{
-        unsigned int    ncyc_hi, ncyc_lo;
-        unsigned int    hi, lo, borrow;
-        uint64_t  result;
- 
-        /* Get cycle counter */
-        access_counter(&ncyc_hi, &ncyc_lo);
- 
-        /* Do double precision subtraction */
-        lo = ncyc_lo - cyc_lo;
-        borrow = lo > ncyc_lo;
-        hi = ncyc_hi - cyc_hi - borrow;
- 
-        result = (uint64_t)hi * (1 << 30) * 4 + lo;
-        if (result < 0) {
-                printf("Error: counter returns neg value: %.0f\n", result);
-        }
-        return result;
+static inline void run_code(){
+    run_some_code(run_some_code(5));
 }
+
+
+
 
 int main(){
-    get_counter();
-    uint64_t start_ts = get_tsc(), end_ts;
-    std::cout << start_ts << std::endl;
-    std::cout << get_counter() << std::endl;
-    start_ts = get_tsc();
-    uint64_t a = 0;
-    for (uint64_t i = 0; i < 3ULL*1000*1000*1000; i++){
-        a++;
+    const uint64_t count = 1000ULL*1000ULL;
+    auto start_time = std::chrono::high_resolution_clock::now();
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto temp_start_time = std::chrono::high_resolution_clock::now();
+    auto temp_end_time = std::chrono::high_resolution_clock::now();
+
+    uint64_t start_tsc, end_tsc;
+    uint64_t temp_start_tsc, temp_end_tsc;
+
+    std::cout << "get tsc overhead" << std::endl;
+
+    start_tsc = get_start_tsc();
+    for (uint64_t i = 0; i < count; i++){
+        temp_start_tsc = get_start_tsc();
+        temp_end_tsc = get_end_tsc();
     }
-    end_ts = get_tsc();
-    std::cout << get_counter() << std::endl;
-    std::cout << end_ts << std::endl;
-    std::cout << end_ts - start_ts << std::endl;
-    std::cout << a << std::endl;
+    end_tsc = get_end_tsc();
+    std::cout << (end_tsc-start_tsc)/count << " cycles" << std::endl;
+
+    start_time = std::chrono::high_resolution_clock::now();
+    for (uint64_t i = 0; i < count; i++){
+        temp_start_tsc = get_start_tsc();
+        temp_end_tsc = get_end_tsc();
+    }
+    end_time = std::chrono::high_resolution_clock::now();
+    std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count()/count << " ns" << std::endl;
+
+    std::cout << "chrono clock  overhead" << std::endl;
+
+    start_tsc = get_start_tsc();
+    for (uint64_t i = 0; i < count; i++){
+        temp_start_time = std::chrono::high_resolution_clock::now();
+        temp_end_time = std::chrono::high_resolution_clock::now();
+    }
+    end_tsc = get_end_tsc();
+    std::cout << (end_tsc-start_tsc)/count << " cycles" << std::endl;
+
+    start_time = std::chrono::high_resolution_clock::now();
+    for (uint64_t i = 0; i < count; i++){
+        temp_start_time = std::chrono::high_resolution_clock::now();
+        temp_end_time = std::chrono::high_resolution_clock::now();
+    }
+    end_time = std::chrono::high_resolution_clock::now();
+    std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count()/count << " ns" << std::endl;
+
+    // std::cout << "time code " << std::endl;
+
+    // uint64_t temp_var = 0;
+    // const uint64_t temp_count = 1ULL;
+    // start_tsc = get_start_tsc();
+    // run_code();
+    // end_tsc = get_end_tsc();
+    // std::cout << (end_tsc-start_tsc) << " cycles" << std::endl;
+
+    // start_time = std::chrono::high_resolution_clock::now();
+    // run_code();
+    // end_time = std::chrono::high_resolution_clock::now();
+    // std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count() << " ns" << std::endl;
+
+
+
 }
