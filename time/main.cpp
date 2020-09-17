@@ -106,7 +106,7 @@ int main(){
     end_time = std::chrono::high_resolution_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count()/count << " ns" << std::endl;
 
-    std::cout << "chrono clock  overhead" << std::endl;
+    std::cout << "chrono high_resolution_clock clock  overhead" << std::endl;
 
     start_tsc = get_start_tsc();
     for (uint64_t i = 0; i < count; i++){
@@ -123,6 +123,26 @@ int main(){
     }
     end_time = std::chrono::high_resolution_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count()/count << " ns" << std::endl;
+
+
+    std::cout << "chrono system_clock clock  overhead" << std::endl;
+
+    start_tsc = get_start_tsc();
+    for (uint64_t i = 0; i < count; i++){
+        temp_start_time = std::chrono::system_clock::now();
+        temp_end_time = std::chrono::system_clock::now();
+    }
+    end_tsc = get_end_tsc();
+    std::cout << (end_tsc-start_tsc)/count << " cycles" << std::endl;
+
+    start_time = std::chrono::high_resolution_clock::now();
+    for (uint64_t i = 0; i < count; i++){
+        temp_start_time = std::chrono::system_clock::now();
+        temp_end_time = std::chrono::system_clock::now();
+    }
+    end_time = std::chrono::high_resolution_clock::now();
+    std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count()/count << " ns" << std::endl;
+
 
     // std::cout << "time code " << std::endl;
 
